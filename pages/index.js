@@ -1,12 +1,22 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
+import SocketIOClient from "socket.io-client";
 import MediaSync from "./containers/media-sync";
 import { isEmpty } from "lodash";
 import Register from "./containers/register";
 
 import "antd/dist/antd.css";
 
-import { getSocket } from "./containers/utils";
+let socket = null;
+
+export const getSocket = () => {
+  if (!socket)
+    socket = SocketIOClient.connect(process.env.BASE_URL, {
+      path: "/api/socketio",
+    });
+
+  return socket;
+};
 
 const App = () => {
   const [isReady, setIsReady] = useState(false);
@@ -38,7 +48,7 @@ const App = () => {
 
     socket.on("time", (newTime) => {
       console.log("time", newTime);
-      setTime(newTime);
+      setTime(newTime + 0.01);
     });
 
     if (socket) return () => socket.disconnect();
