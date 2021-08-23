@@ -1,27 +1,46 @@
-import React, { useEffect } from "react";
-import SocketIOClient from "socket.io-client";
-
-import MediaPlayer from "../../components/media-player";
+import React, { useState, useCallback } from "react";
+import { Button } from "antd";
+import axios from "axios";
+import MediaPlayer from "../media-player";
 import User from "../../components/user";
-import styles from "../../../styles/Home.module.css";
 
-export default function Home() {
-  useEffect(() => {
-    const socket = SocketIOClient.connect(process.env.BASE_URL, {
-      path: "/api/socketio",
+const Home = ({ users, host, socketID, time }) => {
+  const handleReset = useCallback(async () => {
+    const resp = await axios.post("/api/reset", {
+      headers: { "Content-Type": "application/json" },
     });
 
-    socket.on("connect", () => {
-      console.log("SOCKET CONNECTED!", socket.id);
-    });
-
-    if (socket) return () => socket.disconnect();
+    if (resp) console.log(resp);
   }, []);
 
+  const handleTakeHost = useCallback(async () => {
+    const resp = await axios.post("/api/takeHost", {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ host: socketID }),
+    });
+
+    if (resp) console.log(resp);
+  }, [host]);
+
   return (
-    <div className={styles.container}>
-      <User name="Nhat Vu" />
-      <MediaPlayer />
+    <div style={{ display: "flex", flexDirection: "row" }}>
+      <div style={{ flex: 2, padding: "16px" }}>
+        {users &&
+          Object.entries(users).map(([key, value]) => (
+            <User key={key} name={value?.name} active={host === key} />
+          ))}
+      </div>
+      <div style={{ flex: 8 }}>
+        <div style={{ textAlign: "right", padding: "16px" }}>
+          <Button onClick={handleTakeHost}>Lấy quyền phát</Button>{" "}
+          <Button onClick={handleReset}>Reset (please be careful)</Button>
+        </div>
+        <div>
+          <MediaPlayer time={time} isHost={host === socketID} />
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default Home;
