@@ -4,7 +4,7 @@ import axios from "axios";
 import MediaPlayer from "../media-player";
 import User from "../../components/user";
 
-const Home = ({ users, host, socketID }) => {
+const Home = ({ users, host, socketID, time }) => {
   const handleReset = useCallback(async () => {
     const resp = await axios.post("/api/reset", {
       headers: { "Content-Type": "application/json" },
@@ -36,7 +36,7 @@ const Home = ({ users, host, socketID }) => {
           <Button onClick={handleReset}>Reset (please be careful)</Button>
         </div>
         <div>
-          <MediaPlayer />
+          <MediaPlayer time={time} isHost={host === socketID} />
         </div>
       </div>
     </div>

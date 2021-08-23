@@ -1,5 +1,6 @@
 let users = {};
 let host = "";
+let time = 0;
 
 export const getUsers = () => users;
 export const setUsers = (newUsers) => {
@@ -21,7 +22,18 @@ export const resetHost = () => {
   return host;
 };
 
+export const getTime = () => time;
+export const setTime = (newTime) => {
+  time = newTime;
+  return time;
+};
+export const resetTime = () => {
+  time = 0;
+  return time;
+};
+
 export const reset = () => {
   resetUser();
   resetHost();
+  resetTime();
 };

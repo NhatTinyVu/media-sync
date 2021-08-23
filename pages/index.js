@@ -13,6 +13,7 @@ const App = () => {
   const [socketID, setSocketID] = useState(null);
   const [users, setUsers] = useState(null);
   const [host, setHost] = useState("");
+  const [time, setTime] = useState("");
 
   useEffect(() => {
     const socket = getSocket();
@@ -30,9 +31,14 @@ const App = () => {
       setUsers(newUsers);
     });
 
-    socket.on("host", (host) => {
-      console.log("host", host);
-      setHost(host);
+    socket.on("host", (newHost) => {
+      console.log("host", newHost);
+      setHost(newHost);
+    });
+
+    socket.on("time", (newTime) => {
+      console.log("time", newTime);
+      setTime(newTime);
     });
 
     if (socket) return () => socket.disconnect();
@@ -48,7 +54,9 @@ const App = () => {
       {!isReady && (
         <Register socketID={socketID} onComplete={handleOnRegistered} />
       )}
-      {isReady && <MediaSync socketID={socketID} users={users} host={host} />}
+      {isReady && (
+        <MediaSync time={time} socketID={socketID} users={users} host={host} />
+      )}
     </>
   );
 };
