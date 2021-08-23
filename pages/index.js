@@ -6,7 +6,7 @@ import Register from "./containers/register";
 
 import "antd/dist/antd.css";
 
-import { getSocket } from "./utils";
+import { getSocket } from "./containers/utils";
 
 const App = () => {
   const [isReady, setIsReady] = useState(false);
