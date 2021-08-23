@@ -25,7 +25,15 @@ const MediaPlayer = () => {
       >
         Kéo video vào đây nhé
       </Dragger>
-      {fileURL && <ReactPlayer playing url={fileURL} />}
+      {fileURL && (
+        <ReactPlayer
+          width="100%"
+          height="100%"
+          controls
+          playing
+          url={fileURL}
+        />
+      )}
     </div>
   );
 };
