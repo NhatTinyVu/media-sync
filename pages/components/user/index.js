@@ -1,5 +1,7 @@
+import { Avatar } from "antd";
+
 const User = ({ name }) => {
-  return <div>{name}</div>;
+  return <Avatar>{name}</Avatar>;
 };
 
 export default User;
