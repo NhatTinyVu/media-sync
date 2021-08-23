@@ -64,6 +64,7 @@ const App = () => {
       {!isReady && (
         <Register socketID={socketID} onComplete={handleOnRegistered} />
       )}
+
       {isReady && (
         <MediaSync time={time} socketID={socketID} users={users} host={host} />
       )}
