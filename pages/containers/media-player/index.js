@@ -8,6 +8,7 @@ const { Dragger } = Upload;
 const beforeUpload = () => false;
 
 const MediaPlayer = ({ isHost, time }) => {
+  console.log(isHost);
   const player = useRef(null);
   const [fileURL, setFileURL] = useState(null);
 
