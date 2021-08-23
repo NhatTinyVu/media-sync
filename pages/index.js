@@ -18,9 +18,21 @@ export const getSocket = () => {
   return socket;
 };
 
+function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+const socketID = makeid(8);
+
 const App = () => {
   const [isReady, setIsReady] = useState(false);
-  const [socketID, setSocketID] = useState(null);
   const [users, setUsers] = useState(null);
   const [host, setHost] = useState("");
   const [time, setTime] = useState("");
@@ -30,7 +42,6 @@ const App = () => {
 
     socket.on("connect", () => {
       console.log("SOCKET CONNECTED!", socket.id);
-      setSocketID(socket.id);
     });
 
     socket.on("users", (users) => {
@@ -48,7 +59,7 @@ const App = () => {
 
     socket.on("time", (newTime) => {
       console.log("time", newTime);
-      setTime(newTime + 0.01);
+      setTime(newTime);
     });
 
     if (socket) return () => socket.disconnect();
