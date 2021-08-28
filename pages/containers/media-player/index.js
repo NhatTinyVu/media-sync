@@ -20,7 +20,6 @@ function secondsToHms(d) {
 }
 
 const MediaPlayer = ({ isHost, time }) => {
-  console.log(isHost);
   const player = useRef(null);
   const [fileURL, setFileURL] = useState(null);
   const [flip, setFlip] = useState(false);
