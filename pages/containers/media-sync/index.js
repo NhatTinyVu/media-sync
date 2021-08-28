@@ -23,17 +23,17 @@ const Home = ({ users, host, socketID, time }) => {
   }, [host]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "row" }}>
-      <div style={{ flex: 2, padding: "16px" }}>
-        {users &&
-          Object.entries(users).map(([key, value]) => (
-            <User key={key} name={value?.name} active={host === key} />
-          ))}
-      </div>
-      <div style={{ flex: 8 }}>
+    <div>
+      <div>
         <div style={{ textAlign: "right", padding: "16px" }}>
           <Button onClick={handleTakeHost}>Lấy quyền phát</Button>{" "}
           <Button onClick={handleReset}>Reset (please be careful)</Button>
+        </div>
+        <div style={{ padding: "16px" }}>
+          {users &&
+            Object.entries(users).map(([key, value]) => (
+              <User key={key} name={value?.name} active={host === key} />
+            ))}
         </div>
         <div>
           <MediaPlayer time={time} isHost={host === socketID} />

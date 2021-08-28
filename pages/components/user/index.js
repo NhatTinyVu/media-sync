@@ -4,6 +4,7 @@ const User = ({ name, active }) => {
       style={{
         padding: 8,
         border: "1px solid #ccc",
+        display: "inline-block",
         ...(active ? { color: "red", fontWeight: "bold" } : {}),
       }}
     >
