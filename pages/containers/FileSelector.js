@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -10,7 +10,14 @@ const containerStyle = {
   cursor: "pointer",
 };
 
-const FileSelector = ({ files, selectedFile, program, onSelected, isHost }) => {
+const FileSelector = ({
+  files,
+  selectedFile,
+  program,
+  onSelected,
+  onRemoved,
+  isHost,
+}) => {
   const hanleSelectFile = useCallback(
     async (programName) => {
       onSelected(programName);
@@ -39,7 +46,9 @@ const FileSelector = ({ files, selectedFile, program, onSelected, isHost }) => {
               selectedFile &&
               selectedFile.program === programName && <SyncOutlined spin />
             }
+            closable
             style={{ padding: "8px 16px" }}
+            onClose={() => onRemoved(programName)}
           >
             <b>{programName}</b>{" "}
             <u>
