@@ -8,6 +8,7 @@ const containerStyle = {
   margin: "0 16px",
   padding: "16px 16px 24px",
   maxWidth: 500,
+  borderRadius: 2,
   background: `rgba(255, 255, 255, 0.65)`,
 };
 

@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Switch } from "antd";
 import ReactPlayer from "react-player";
 import axios from "axios";
+import { isEmpty } from "lodash";
 
 function secondsToHms(d) {
   d = Number(d);
@@ -42,7 +43,7 @@ const MediaPlayer = ({ fileURL, isHost, time }) => {
   }, [isHost, time]);
 
   return (
-    fileURL && (
+    !isEmpty(fileURL) && (
       <div>
         <div
           style={{
@@ -65,6 +66,7 @@ const MediaPlayer = ({ fileURL, isHost, time }) => {
           width="100%"
           height="100%"
           controls
+          playing
           url={fileURL}
           style={flip ? { transform: "scaleX(-1)" } : undefined}
         />

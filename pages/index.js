@@ -58,6 +58,7 @@ const useBackground = () => {
       backgroundSize: "cover",
       height: "100%",
       position: "relative",
+      minHeight: "100vh",
     }),
     [backgroundID]
   );
@@ -71,6 +72,7 @@ const App = () => {
   const [time, setTime] = useState("");
   const [socketID, setSocketID] = useState("");
   const [program, setProgram] = useState([]);
+  const [currentProgram, setCurrentProgram] = useState("");
   const [backgroundStyle] = useBackground();
 
   useEffect(() => {
@@ -105,6 +107,11 @@ const App = () => {
       setProgram(newProgram ? JSON.parse(newProgram) : []);
     });
 
+    socket.on("currentProgram", (newCurrentProgram) => {
+      console.log("currentProgram", newCurrentProgram);
+      setCurrentProgram(newCurrentProgram);
+    });
+
     if (socket) return () => socket.disconnect();
   }, []);
 
@@ -123,6 +130,7 @@ const App = () => {
           host={host}
           time={time}
           program={program}
+          currentProgram={currentProgram}
         />
       </div>
     </>

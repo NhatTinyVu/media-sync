@@ -1,36 +1,87 @@
 import React, { useCallback, useState, useMemo, useEffect } from "react";
-import { remove } from "lodash";
+import { isEmpty, get } from "lodash";
+import axios from "axios";
 
 import Register from "./Register";
 import ListUsers from "./ListUsers";
 import FileUploader from "./FileUploader";
 import ExcerciseProgram from "./ExcerciseProgram";
+import FileSelector from "./FileSelector";
 import MediaPlayer from "./MediaPlayer";
 
-const WorkoutTogether = ({ socketID, users, host, time, program }) => {
+const WorkoutTogether = ({
+  socketID,
+  users,
+  host,
+  time,
+  program: programFromSocket,
+  currentProgram: currentProgramFromServer,
+}) => {
   const [isReady, setIsReady] = useState(false);
-  const [fileURL, setFileURL] = useState(null);
+  const [program, setProgram] = useState(programFromSocket);
   const [currentFile, setCurrentFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState({});
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [currentProgram, setCurrentProgram] = useState(null);
   const handleOnRegistered = useCallback(() => setIsReady(true), []);
   const handleChangeFileURL = useCallback(({ url, name }) => {
     setCurrentFile({ url, name });
   }, []);
+  const handleSelectFile = useCallback(
+    (programName) =>
+      setSelectedFile(
+        selectedFiles.find(({ program: name }) => name === programName)
+      ),
+    [selectedFiles]
+  );
 
   useEffect(() => {
-    if (program.length > 0) setCurrentProgram(program[0]);
+    setProgram(programFromSocket);
+  }, [programFromSocket]);
+
+  useEffect(() => {
+    const getProgram = async () => {
+      const resp = await axios.get("/api/program", {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (resp) console.log(resp);
+
+      if (resp?.data) setProgram(resp.data);
+    };
+
+    getProgram();
+  }, []);
+
+  useEffect(() => {
+    if (get(program, "length") > 0)
+      setCurrentProgram(
+        program.find(
+          (name) => !selectedFiles.map(({ program }) => program).includes(name)
+        )
+      );
   }, [program]);
+
+  useEffect(() => {
+    if (currentProgramFromServer) {
+      const newSelectedFile = selectedFiles.find(
+        ({ program: name }) => name === currentProgramFromServer
+      );
+      if (newSelectedFile) setSelectedFile(newSelectedFile);
+    }
+  }, [currentProgramFromServer]);
 
   useEffect(() => {
     if (!currentFile) return;
 
-    setFileURL(currentFile.url);
-
+    const file = { ...currentFile, program: currentProgram };
     const mapSelectedFiles = [
-      ...selectedFiles,
-      { ...currentFile, program: currentProgram },
+      ...selectedFiles.filter(
+        ({ program: programName }) => programName !== currentProgram
+      ),
+      file,
     ];
+    setSelectedFile(file);
     setSelectedFiles(mapSelectedFiles);
     setCurrentProgram(
       program.find(
@@ -43,7 +94,7 @@ const WorkoutTogether = ({ socketID, users, host, time, program }) => {
   }, [currentFile]);
 
   const buttonText = useMemo(() => {
-    if (program.length === 0)
+    if (!get(program, "length"))
       return "Vui lòng nhập bộ môn muốn tập ở trên trước";
     if (currentProgram)
       return (
@@ -55,7 +106,8 @@ const WorkoutTogether = ({ socketID, users, host, time, program }) => {
     return "Bạn đã chọn đủ môn tập";
   }, [program, currentProgram]);
 
-  const disabledUpload = program.length === 0 || !currentProgram;
+  const disabledUpload = isEmpty(program) || !currentProgram;
+  const isHost = host === socketID;
 
   if (!isReady)
     return <Register socketID={socketID} onComplete={handleOnRegistered} />;
@@ -69,7 +121,20 @@ const WorkoutTogether = ({ socketID, users, host, time, program }) => {
         buttonText={buttonText}
         onChange={handleChangeFileURL}
       />
-      <MediaPlayer fileURL={fileURL} time={time} isHost={host === socketID} />
+      <FileSelector
+        isHost={isHost}
+        program={program}
+        files={selectedFiles}
+        selectedFile={selectedFile}
+        currentProgram={currentProgram}
+        currentProgramFromServer={currentProgramFromServer}
+        onSelected={handleSelectFile}
+      />
+      <MediaPlayer
+        fileURL={get(selectedFile, "url")}
+        time={time}
+        isHost={isHost}
+      />
     </div>
   );
 };

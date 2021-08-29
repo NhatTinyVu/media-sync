@@ -1,7 +1,7 @@
 import { uniq } from "lodash";
 import { setProgram, getProgram } from "./utils";
 
-export default function register(req, res) {
+export default function program(req, res) {
   if (req.method === "GET") {
     res.status(201).json(JSON.stringify(getProgram()));
   }
