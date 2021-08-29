@@ -15,6 +15,7 @@ const WorkoutTogether = ({
   users,
   host,
   time,
+  currentPlayingStatus,
   program: programFromSocket,
   currentProgram: currentProgramFromServer,
 }) => {
@@ -167,6 +168,7 @@ const WorkoutTogether = ({
         onSelected={handleSelectFile}
       />
       <MediaPlayer
+        currentPlayingStatus={currentPlayingStatus}
         fileURL={get(selectedFile, "url")}
         time={time}
         isHost={isHost}

@@ -73,6 +73,7 @@ const App = () => {
   const [socketID, setSocketID] = useState("");
   const [program, setProgram] = useState([]);
   const [currentProgram, setCurrentProgram] = useState("");
+  const [currentPlayingStatus, setCurrentPlayingStatus] = useState(true);
   const [backgroundStyle] = useBackground();
 
   useEffect(() => {
@@ -116,6 +117,11 @@ const App = () => {
       setCurrentProgram(JSON.parse(newCurrentProgram));
     });
 
+    socket.on("currentPlayingStatus", (newCurrentPlayingStatus) => {
+      console.log("currentPlayingStatus", newCurrentPlayingStatus);
+      setCurrentPlayingStatus(JSON.parse(newCurrentPlayingStatus));
+    });
+
     if (socket) return () => socket.disconnect();
   }, []);
 
@@ -136,6 +142,7 @@ const App = () => {
           program={program}
           currentProgram={currentProgram}
           setHost={setHost}
+          currentPlayingStatus={currentPlayingStatus}
         />
       </div>
     </>

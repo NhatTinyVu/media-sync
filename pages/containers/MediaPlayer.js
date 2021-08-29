@@ -16,9 +16,10 @@ function secondsToHms(d) {
   return hDisplay + mDisplay + sDisplay;
 }
 
-const MediaPlayer = ({ fileURL, isHost, time }) => {
+const MediaPlayer = ({ fileURL, isHost, time, currentPlayingStatus }) => {
   const player = useRef(null);
   const [flip, setFlip] = useState(false);
+  const [playingStatus, setPlayingStatus] = useState(true);
 
   const handleUpdateTime = useCallback(async () => {
     const time = player?.current?.getCurrentTime();
@@ -28,13 +29,33 @@ const MediaPlayer = ({ fileURL, isHost, time }) => {
     });
   }, []);
 
+  const handleUpdatePlayingStatus = useCallback(async () => {
+    await axios.post("/api/updatePlayingStatus", {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ currentPlayingStatus: playingStatus }),
+    });
+  }, [playingStatus]);
+
   useEffect(() => {
     let intervalEmit = null;
-    if (isHost) intervalEmit = setInterval(() => handleUpdateTime(), 3000);
+    if (isHost) intervalEmit = setInterval(() => handleUpdateTime(), 5000);
     return () => {
       if (intervalEmit) clearInterval(intervalEmit);
     };
   }, [isHost]);
+
+  useEffect(() => {
+    let intervalEmit = null;
+    if (isHost)
+      intervalEmit = setInterval(() => handleUpdatePlayingStatus(), 5000);
+    return () => {
+      if (intervalEmit) clearInterval(intervalEmit);
+    };
+  }, [isHost]);
+
+  useEffect(() => {
+    if (isHost) handleUpdatePlayingStatus();
+  }, [playingStatus]);
 
   useEffect(() => {
     if (
@@ -44,6 +65,13 @@ const MediaPlayer = ({ fileURL, isHost, time }) => {
       player?.current?.seekTo(time);
     }
   }, [isHost, time]);
+
+  useEffect(() => {
+    if (!isHost) {
+      console.log("set currentPlayingStatus", currentPlayingStatus);
+      setPlayingStatus(currentPlayingStatus);
+    }
+  }, [isHost, currentPlayingStatus]);
 
   return (
     !isEmpty(fileURL) && (
@@ -69,9 +97,15 @@ const MediaPlayer = ({ fileURL, isHost, time }) => {
           width="100%"
           height="100%"
           controls
-          playing
+          playing={playingStatus}
           url={fileURL}
           style={flip ? { transform: "scaleX(-1)" } : undefined}
+          onStart={() => setPlayingStatus(true)}
+          onPlay={() => setPlayingStatus(true)}
+          onPause={() => {
+            console.log("onPause");
+            setPlayingStatus(false);
+          }}
         />
       </div>
     )

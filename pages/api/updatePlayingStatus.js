@@ -2,7 +2,9 @@ import { setCurrentPlayingStatus, getCurrentPlayingStatus } from "./utils";
 
 export default function register(req, res) {
   if (req.method === "POST") {
-    const currentPlayingStatus = JSON.parse(req.body.body)?.playingStatus;
+    const currentPlayingStatus = JSON.parse(
+      req.body.body
+    )?.currentPlayingStatus;
     setCurrentPlayingStatus(currentPlayingStatus);
 
     res?.socket?.server?.io?.emit(
