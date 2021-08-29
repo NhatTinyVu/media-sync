@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from "react";
-import { isEmpty, get, find } from "lodash";
+import { isEmpty, get, find, remove } from "lodash";
 import axios from "axios";
 
 import Register from "./Register";
@@ -35,6 +35,12 @@ const WorkoutTogether = ({
       setSelectedFile(
         selectedFiles.find(({ program: name }) => name === programName)
       ),
+    [selectedFiles]
+  );
+
+  const handleRemoveFile = useCallback(
+    (programName) =>
+      remove(selectedFiles, (file) => file.program === programName),
     [selectedFiles]
   );
 
@@ -166,6 +172,7 @@ const WorkoutTogether = ({
         currentProgram={currentProgram}
         currentProgramFromServer={currentProgramFromServer}
         onSelected={handleSelectFile}
+        onRemoved={handleRemoveFile}
       />
       <MediaPlayer
         currentProgramFromServer={currentProgramFromServer}
