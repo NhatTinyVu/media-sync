@@ -10,6 +10,13 @@ export const setUsers = (newUsers) => {
   users = newUsers;
   return users;
 };
+export const addUser = (user) => {
+  users = {
+    ...users,
+    ...user,
+  };
+  return users;
+};
 export const resetUser = () => {
   users = {};
   return users;

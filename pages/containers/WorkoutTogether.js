@@ -10,6 +10,7 @@ import FileSelector from "./FileSelector";
 import MediaPlayer from "./MediaPlayer";
 
 const WorkoutTogether = ({
+  setHost,
   socketID,
   users,
   host,
@@ -139,7 +140,13 @@ const WorkoutTogether = ({
   const disabledUpload = isEmpty(program) || !currentProgram;
 
   if (!isReady)
-    return <Register socketID={socketID} onComplete={handleOnRegistered} />;
+    return (
+      <Register
+        setHost={setHost}
+        socketID={socketID}
+        onComplete={handleOnRegistered}
+      />
+    );
 
   return (
     <div>

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import { Modal, Input, Button } from "antd";
 
-const Register = ({ socketID, onComplete }) => {
+const Register = ({ socketID, setHost, onComplete }) => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +21,18 @@ const Register = ({ socketID, onComplete }) => {
   }, [socketID, name]);
 
   useEffect(() => {
+    const getHost = async () => {
+      setLoading(true);
+      const resp = await axios.get("/api/host", {
+        headers: { "Content-Type": "application/json" },
+      });
+      setLoading(false);
+
+      if (resp) console.log(resp);
+
+      if (resp?.data) setHost(resp.data);
+    };
+
     const checkUser = async () => {
       setLoading(true);
       const resp = await axios.get("/api/users", {
@@ -34,6 +46,7 @@ const Register = ({ socketID, onComplete }) => {
     };
 
     if (socketID) checkUser();
+    getHost();
   }, [socketID]);
 
   return (
