@@ -38,7 +38,7 @@ function makeID(length) {
 
 const getSocketID = () => {
   let socketID = window?.localStorage?.getItem("socketID");
-  if (!socketID || socketID === "null") {
+  if (!socketID || socketID === "null" || socketID === "undefined") {
     socketID = makeID(8);
     window?.localStorage?.setItem("socketID", socketID);
   }
@@ -87,7 +87,11 @@ const App = () => {
     socket.on("users", (users) => {
       const newUsers = JSON.parse(users);
       console.log("users", newUsers);
-      if (isEmpty(newUsers)) window.location.reload();
+      if (isEmpty(newUsers)) {
+        window?.localStorage?.setItem("socketID", undefined);
+        window?.localStorage?.clear();
+        window.location.reload();
+      }
 
       setUsers(newUsers);
     });
@@ -131,6 +135,7 @@ const App = () => {
           time={time}
           program={program}
           currentProgram={currentProgram}
+          setHost={setHost}
         />
       </div>
     </>

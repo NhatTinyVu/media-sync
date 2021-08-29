@@ -37,6 +37,9 @@ const ListUsers = ({ users, host, socketID }) => {
       cancelText: "Thôi",
       title: "Tất cả người tham gia sẽ thoát ra, bạn chắc chắn chứ?",
       onOk: async () => {
+        window?.localStorage?.setItem("socketID", undefined);
+        window?.localStorage?.clear();
+
         setResetLoading(true);
         const resp = await axios.post("/api/reset", {
           headers: { "Content-Type": "application/json" },
@@ -60,7 +63,6 @@ const ListUsers = ({ users, host, socketID }) => {
   }, [socketID, host]);
 
   const handleResetHost = useCallback(async () => {
-    window?.localStorage?.clear();
     setHostLoading(true);
     const resp = await axios.post("/api/takeHost", {
       headers: { "Content-Type": "application/json" },
