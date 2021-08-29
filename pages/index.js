@@ -33,7 +33,7 @@ function makeID(length) {
   for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
-  return result;
+  return new Date().toISOString() + result;
 }
 
 const getSocketID = () => {
@@ -58,6 +58,7 @@ const useBackground = () => {
       backgroundSize: "cover",
       height: "100%",
       position: "relative",
+      minHeight: "100vh",
     }),
     [backgroundID]
   );
@@ -70,6 +71,8 @@ const App = () => {
   const [host, setHost] = useState("");
   const [time, setTime] = useState("");
   const [socketID, setSocketID] = useState("");
+  const [program, setProgram] = useState([]);
+  const [currentProgram, setCurrentProgram] = useState("");
   const [backgroundStyle] = useBackground();
 
   useEffect(() => {
@@ -99,6 +102,16 @@ const App = () => {
       setTime(newTime ? Number(newTime) : newTime);
     });
 
+    socket.on("program", (newProgram) => {
+      console.log("program", newProgram);
+      setProgram(newProgram ? JSON.parse(newProgram) : []);
+    });
+
+    socket.on("currentProgram", (newCurrentProgram) => {
+      console.log("currentProgram", newCurrentProgram);
+      setCurrentProgram(JSON.parse(newCurrentProgram));
+    });
+
     if (socket) return () => socket.disconnect();
   }, []);
 
@@ -116,6 +129,8 @@ const App = () => {
           users={users}
           host={host}
           time={time}
+          program={program}
+          currentProgram={currentProgram}
         />
       </div>
     </>

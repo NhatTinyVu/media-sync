@@ -1,6 +1,9 @@
 let users = {};
 let host = "";
 let time = 0;
+let currentProgram = "";
+let currentPlayingStatus = false;
+let program = [];
 
 export const getUsers = () => users;
 export const setUsers = (newUsers) => {
@@ -32,8 +35,40 @@ export const resetTime = () => {
   return time;
 };
 
+export const getCurrentProgram = () => currentProgram;
+export const setCurrentProgram = (newCurrentProgram) => {
+  currentProgram = newCurrentProgram;
+  return currentProgram;
+};
+export const resetCurrentProgram = () => {
+  currentProgram = "";
+  return currentProgram;
+};
+
+export const getCurrentPlayingStatus = () => currentPlayingStatus;
+export const setCurrentPlayingStatus = (newCurrentPlayingStatus) => {
+  currentPlayingStatus = newCurrentPlayingStatus;
+  return currentPlayingStatus;
+};
+export const resetCurrentPlayingStatus = () => {
+  currentPlayingStatus = "";
+  return currentPlayingStatus;
+};
+
 export const reset = () => {
   resetUser();
   resetHost();
   resetTime();
+  resetProgram();
+  resetCurrentPlayingStatus();
+};
+
+export const getProgram = () => program;
+export const setProgram = (newProgram) => {
+  program = newProgram;
+  return program;
+};
+export const resetProgram = () => {
+  program = [];
+  return program;
 };
