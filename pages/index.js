@@ -46,13 +46,10 @@ const getSocketID = () => {
   return socketID;
 };
 
-const genBackgroundID = () => random(1, 3);
-
-const useBackground = () => {
-  const [backgroundID, setBackgroundID] = useState(genBackgroundID());
-  const style = useMemo(
+const useBackground = () =>
+  useMemo(
     () => ({
-      backgroundImage: `url(/gym-${backgroundID}.jpeg)`,
+      backgroundImage: `url(/gym-${random(1, 3)}.jpeg)`,
       backgroundPosition: "top",
       backgroundRepeat: "no-repeat",
       backgroundSize: "cover",
@@ -60,11 +57,8 @@ const useBackground = () => {
       position: "relative",
       minHeight: "100vh",
     }),
-    [backgroundID]
+    []
   );
-
-  return [style, setBackgroundID];
-};
 
 const App = () => {
   const [users, setUsers] = useState(null);
@@ -74,7 +68,7 @@ const App = () => {
   const [program, setProgram] = useState([]);
   const [currentProgram, setCurrentProgram] = useState("");
   const [currentPlayingStatus, setCurrentPlayingStatus] = useState(true);
-  const [backgroundStyle] = useBackground();
+  const backgroundStyle = useBackground();
 
   useEffect(() => {
     console.log("getSocketID()", getSocketID());
