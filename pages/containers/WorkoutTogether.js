@@ -39,9 +39,18 @@ const WorkoutTogether = ({
   );
 
   const handleRemoveFile = useCallback(
-    (programName) =>
-      remove(selectedFiles, (file) => file.program === programName),
-    [selectedFiles]
+    (programName) => {
+      const newSelectedFiles = selectedFiles.filter(
+        (file) => file.program !== programName
+      );
+      setSelectedFiles(newSelectedFiles);
+      setCurrentProgram(
+        program.find(
+          (name) => !newSelectedFiles.map((file) => file.program).includes(name)
+        )
+      );
+    },
+    [program, selectedFiles]
   );
 
   useEffect(() => {
