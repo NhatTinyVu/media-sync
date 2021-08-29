@@ -60,6 +60,7 @@ const ListUsers = ({ users, host, socketID }) => {
   }, [socketID, host]);
 
   const handleResetHost = useCallback(async () => {
+    window?.localStorage?.clear();
     setHostLoading(true);
     const resp = await axios.post("/api/takeHost", {
       headers: { "Content-Type": "application/json" },

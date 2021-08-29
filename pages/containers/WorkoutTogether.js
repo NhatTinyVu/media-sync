@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from "react";
-import { isEmpty, get } from "lodash";
+import { isEmpty, get, find } from "lodash";
 import axios from "axios";
 
 import Register from "./Register";
@@ -17,6 +17,7 @@ const WorkoutTogether = ({
   program: programFromSocket,
   currentProgram: currentProgramFromServer,
 }) => {
+  const isHost = host === socketID;
   const [isReady, setIsReady] = useState(false);
   const [program, setProgram] = useState(programFromSocket);
   const [currentFile, setCurrentFile] = useState(null);
@@ -53,6 +54,32 @@ const WorkoutTogether = ({
     getProgram();
   }, []);
 
+  const updateSelectedProgram = useCallback(
+    async (programName) => {
+      if (isHost) {
+        const resp = await axios.post("/api/updateCurrentProgram", {
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ currentProgram: programName }),
+        });
+
+        if (resp) console.log(resp);
+      }
+    },
+    [isHost]
+  );
+
+  useEffect(() => {
+    let intervalEmit = null;
+    if (isHost && selectedFile?.program)
+      intervalEmit = setInterval(
+        () => updateSelectedProgram(selectedFile?.program),
+        5000
+      );
+    return () => {
+      if (intervalEmit) clearInterval(intervalEmit);
+    };
+  }, [isHost, selectedFile]);
+
   useEffect(() => {
     if (get(program, "length") > 0)
       setCurrentProgram(
@@ -64,9 +91,12 @@ const WorkoutTogether = ({
 
   useEffect(() => {
     if (currentProgramFromServer) {
-      const newSelectedFile = selectedFiles.find(
-        ({ program: name }) => name === currentProgramFromServer
+      const newSelectedFile = find(
+        selectedFiles,
+        ({ program: programName }) =>
+          programName.toString() === currentProgramFromServer.toString()
       );
+
       if (newSelectedFile) setSelectedFile(newSelectedFile);
     }
   }, [currentProgramFromServer]);
@@ -107,7 +137,6 @@ const WorkoutTogether = ({
   }, [program, currentProgram]);
 
   const disabledUpload = isEmpty(program) || !currentProgram;
-  const isHost = host === socketID;
 
   if (!isReady)
     return <Register socketID={socketID} onComplete={handleOnRegistered} />;

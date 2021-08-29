@@ -33,7 +33,7 @@ function makeID(length) {
   for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
-  return result;
+  return new Date().toISOString() + result;
 }
 
 const getSocketID = () => {
@@ -109,7 +109,7 @@ const App = () => {
 
     socket.on("currentProgram", (newCurrentProgram) => {
       console.log("currentProgram", newCurrentProgram);
-      setCurrentProgram(newCurrentProgram);
+      setCurrentProgram(JSON.parse(newCurrentProgram));
     });
 
     if (socket) return () => socket.disconnect();

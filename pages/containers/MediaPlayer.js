@@ -37,8 +37,11 @@ const MediaPlayer = ({ fileURL, isHost, time }) => {
   }, [isHost]);
 
   useEffect(() => {
-    if (!isHost && Math.abs(player?.current?.getCurrentTime() - time) > 1) {
-      player?.current?.seekTo(time + 0.02);
+    if (
+      !isHost &&
+      Math.abs(Number(player?.current?.getCurrentTime()) - Number(time)) > 5
+    ) {
+      player?.current?.seekTo(time);
     }
   }, [isHost, time]);
 
