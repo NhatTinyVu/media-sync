@@ -168,6 +168,7 @@ const WorkoutTogether = ({
         onSelected={handleSelectFile}
       />
       <MediaPlayer
+        currentProgramFromServer={currentProgramFromServer}
         currentPlayingStatus={currentPlayingStatus}
         fileURL={get(selectedFile, "url")}
         time={time}

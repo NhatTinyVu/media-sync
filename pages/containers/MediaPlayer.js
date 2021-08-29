@@ -1,8 +1,15 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { Switch } from "antd";
+import { Switch, Button } from "antd";
+import { PlayCircleOutlined, PauseCircleOutlined } from "@ant-design/icons";
 import ReactPlayer from "react-player";
 import axios from "axios";
 import { isEmpty } from "lodash";
+
+const backgroundStyle = {
+  textAlign: "center",
+  padding: 8,
+  background: "rgba(255, 255, 255, 0.75)",
+};
 
 function secondsToHms(d) {
   d = Number(d);
@@ -16,7 +23,13 @@ function secondsToHms(d) {
   return hDisplay + mDisplay + sDisplay;
 }
 
-const MediaPlayer = ({ fileURL, isHost, time, currentPlayingStatus }) => {
+const MediaPlayer = ({
+  fileURL,
+  isHost,
+  time,
+  currentPlayingStatus,
+  currentProgramFromServer,
+}) => {
   const player = useRef(null);
   const [flip, setFlip] = useState(false);
   const [playingStatus, setPlayingStatus] = useState(true);
@@ -76,19 +89,39 @@ const MediaPlayer = ({ fileURL, isHost, time, currentPlayingStatus }) => {
   return (
     !isEmpty(fileURL) && (
       <div>
-        <div
-          style={{
-            textAlign: "center",
-            padding: 8,
-            background: "rgba(255, 255, 255, 0.75)",
-          }}
-        >
-          <span style={{ fontWeight: "bold" }}>Lật hướng cho video </span>
+        <div style={backgroundStyle}>
+          <Button
+            type="primary"
+            danger={playingStatus}
+            icon={
+              playingStatus ? <PauseCircleOutlined /> : <PlayCircleOutlined />
+            }
+            onClick={() => setPlayingStatus((status) => !status)}
+          >
+            {playingStatus ? "Dừng video" : "Phát video"}
+          </Button>
+          <span style={{ color: "#3e91f7" }}>{` | `}</span>
+          <span style={{ fontWeight: "bold", color: "#3e91f7" }}>
+            Lật hướng cho video{" "}
+          </span>
           <Switch value={flip} onChange={(newFlip) => setFlip(newFlip)} />
+          <div>
+            Host đang mở video:{" "}
+            {currentProgramFromServer ? (
+              <b>{currentProgramFromServer}</b>
+            ) : (
+              "Host chưa mở/Chưa có host"
+            )}
+          </div>
+          {` | `}
           <span>
-            {" "}
-            Thời gian mà host đang play:{" "}
-            {time ? secondsToHms(time) : <b>Chưa có host</b>}
+            Trạng thái host:{" "}
+            <b>
+              {currentPlayingStatus ? "Đang play video" : "Đang dừng video"}
+            </b>
+            {` | `}
+            Thời gian host đang play:{" "}
+            {time ? secondsToHms(time) : <b>Chưa có host/thông tin</b>}
           </span>
         </div>
 
