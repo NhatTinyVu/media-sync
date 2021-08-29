@@ -49,7 +49,7 @@ const getSocketID = () => {
 const useBackground = () =>
   useMemo(
     () => ({
-      backgroundImage: `url(/gym-1.jpeg)`,
+      backgroundImage: `url(/gym-${random(1, 3)}.jpeg)`,
       backgroundPosition: "top",
       backgroundRepeat: "no-repeat",
       backgroundSize: "cover",
