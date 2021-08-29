@@ -70,6 +70,7 @@ const App = () => {
   const [host, setHost] = useState("");
   const [time, setTime] = useState("");
   const [socketID, setSocketID] = useState("");
+  const [program, setProgram] = useState([]);
   const [backgroundStyle] = useBackground();
 
   useEffect(() => {
@@ -99,6 +100,11 @@ const App = () => {
       setTime(newTime ? Number(newTime) : newTime);
     });
 
+    socket.on("program", (newProgram) => {
+      console.log("program", newProgram);
+      setProgram(newProgram ? JSON.parse(newProgram) : []);
+    });
+
     if (socket) return () => socket.disconnect();
   }, []);
 
@@ -116,6 +122,7 @@ const App = () => {
           users={users}
           host={host}
           time={time}
+          program={program}
         />
       </div>
     </>
