@@ -26,7 +26,7 @@ const ListUsers = ({ users, host, socketID }) => {
     () => [
       users ? users[host] : null,
       host !== socketID ? users && users[socketID] : null,
-      omit(users, [host, socketID]),
+      omit(users, [host]),
     ],
     [users, host, socketID]
   );
