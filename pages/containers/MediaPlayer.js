@@ -3,7 +3,7 @@ import { Switch, Button } from "antd";
 import { PlayCircleOutlined, PauseCircleOutlined } from "@ant-design/icons";
 import ReactPlayer from "react-player";
 import axios from "axios";
-import { isEmpty } from "lodash";
+import { isEmpty, debounce } from "lodash";
 
 const backgroundStyle = {
   textAlign: "center",
@@ -31,6 +31,7 @@ const MediaPlayer = ({
   currentProgramFromServer,
 }) => {
   const player = useRef(null);
+  const [delay, setDelay] = useState(0.0);
   const [flip, setFlip] = useState(false);
   const [playingStatus, setPlayingStatus] = useState(true);
 
@@ -48,6 +49,13 @@ const MediaPlayer = ({
       body: JSON.stringify({ currentPlayingStatus: playingStatus }),
     });
   }, [playingStatus]);
+
+  const handleForceSync = useCallback(() => {
+    if (!isNaN(player?.current?.getCurrentTime() && delay !== 0)) {
+      player?.current?.seekTo(player?.current?.getCurrentTime() + delay);
+      setDelay(0);
+    }
+  }, [delay]);
 
   useEffect(() => {
     let intervalEmit = null;
@@ -71,11 +79,11 @@ const MediaPlayer = ({
   }, [playingStatus]);
 
   useEffect(() => {
-    if (
-      !isHost &&
-      Math.abs(Number(player?.current?.getCurrentTime()) - Number(time)) > 5
-    ) {
-      player?.current?.seekTo(time);
+    if (!isHost) {
+      const delayTime =
+        Number(time) - Number(player?.current?.getCurrentTime());
+      setDelay((current) => (!isNaN(delayTime) ? delayTime + 0.03 : current));
+      if (Math.abs(delayTime) > 2.5) player?.current?.seekTo(time);
     }
   }, [isHost, time]);
 
@@ -123,6 +131,14 @@ const MediaPlayer = ({
             Thời gian host đang play:{" "}
             {time ? secondsToHms(time) : <b>Chưa có host/thông tin</b>}
           </span>
+          {!isHost && (
+            <div>
+              <span>Nếu bạn thấy video khác host. Hãy đồng bộ lại </span>
+              <Button onClick={debounce(handleForceSync, 1000)} type="primary">
+                Đồng bộ
+              </Button>
+            </div>
+          )}
         </div>
 
         <ReactPlayer
