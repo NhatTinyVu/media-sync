@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect } from "react";
 import Head from "next/head";
 import SocketIOClient from "socket.io-client";
-import { isEmpty, random } from "lodash";
+import { isEmpty } from "lodash";
+import ListUsers from "./containers/ListUsers";
 
 import WorkoutTogether from "./containers/WorkoutTogether";
 
@@ -125,9 +126,10 @@ const App = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <div style={navbarStyle}>
-        <div style={titleStyle}>TẬP LUYỆN CÙNG NHAU NHÉ</div>
+        <div style={titleStyle}>TẬP LUYỆN CÙNG NHAU</div>
       </div>
       <div style={backgroundStyle}>
+        <ListUsers users={users} host={host} socketID={socketID} />
         <WorkoutTogether
           socketID={socketID}
           users={users}
