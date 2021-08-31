@@ -6,10 +6,10 @@ import { omit } from "lodash";
 import User from "../components/User";
 
 const titleStyle = {
-  color: "white",
+  color: "#3e91f7",
+  fontSize: 14,
+  marginBottom: 4,
   fontWeight: "bold",
-  fontSize: 16,
-  textShadow: `0px 0px 4px rgb(9,9,121)`,
   margin: "8px 0px 4px",
 };
 

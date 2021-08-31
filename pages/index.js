@@ -3,6 +3,7 @@ import Head from "next/head";
 import SocketIOClient from "socket.io-client";
 import { isEmpty } from "lodash";
 import ListUsers from "./containers/ListUsers";
+import Announcement from "./containers/Announcement";
 
 import WorkoutTogether from "./containers/WorkoutTogether";
 
@@ -130,6 +131,7 @@ const App = () => {
       </div>
       <div style={backgroundStyle}>
         <ListUsers users={users} host={host} socketID={socketID} />
+        <Announcement />
         <WorkoutTogether
           socketID={socketID}
           users={users}
