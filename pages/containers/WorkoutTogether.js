@@ -1,9 +1,8 @@
 import React, { useCallback, useState, useMemo, useEffect } from "react";
-import { isEmpty, get, find, remove } from "lodash";
+import { isEmpty, get, find } from "lodash";
 import axios from "axios";
 
 import Register from "./Register";
-import ListUsers from "./ListUsers";
 import FileUploader from "./FileUploader";
 import ExcerciseProgram from "./ExcerciseProgram";
 import FileSelector from "./FileSelector";
@@ -12,7 +11,6 @@ import MediaPlayer from "./MediaPlayer";
 const WorkoutTogether = ({
   setHost,
   socketID,
-  users,
   host,
   time,
   currentPlayingStatus,
@@ -166,7 +164,6 @@ const WorkoutTogether = ({
 
   return (
     <div>
-      <ListUsers users={users} host={host} socketID={socketID} />
       <ExcerciseProgram program={program} />
       <FileUploader
         disabled={disabledUpload}
