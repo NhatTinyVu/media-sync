@@ -19,14 +19,14 @@ const backgroundStyle = {
   borderRadius: 2,
 };
 
-const ListUsers = ({ users, host, socketID }) => {
+const ListUsers = ({ users, host, socketID, setSocketID }) => {
   const [resetLoading, setResetLoading] = useState(false);
   const [hostLoading, setHostLoading] = useState(false);
   const [hostData, myData, othersData] = useMemo(
     () => [
       users ? users[host] : null,
       host !== socketID ? users && users[socketID] : null,
-      omit(users, [host]),
+      omit(users, [host, socketID]),
     ],
     [users, host, socketID]
   );

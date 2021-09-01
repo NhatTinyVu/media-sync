@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Input, Tag } from "antd";
 import axios from "axios";
+import { get } from "lodash";
 
 const { Search } = Input;
 
@@ -74,19 +75,8 @@ const ExcerciseProgram = ({ program = [] }) => {
 
   return (
     <div style={containerStyle}>
-      <div style={titleStyle}>Bạn muốn tập môn gì?</div>
-      <Search
-        value={programName}
-        onChange={(e) =>
-          setProgramName(e.target.value.replace(/ /g, "").toUpperCase())
-        }
-        placeholder="Ví dụ: BODYJAM74"
-        loading={loading}
-        enterButton="Thêm"
-        onSearch={handleAddProgram}
-      />
       {listProgram?.length > 0 && (
-        <div style={{ marginTop: 16 }}>
+        <div style={{ marginBottom: 16 }}>
           <div style={titleStyle}>Các môn sẽ tập</div>
           {listProgram.map((program) => (
             <Tag
@@ -101,6 +91,21 @@ const ExcerciseProgram = ({ program = [] }) => {
           ))}
         </div>
       )}
+      <div style={titleStyle}>
+        {get(program, "length") > 0
+          ? "Nếu muốn thêm môn tập, hãy nhập vào đây"
+          : "Bạn muốn tập môn gì?"}
+      </div>
+      <Search
+        value={programName}
+        onChange={(e) =>
+          setProgramName(e.target.value.replace(/ /g, "").toUpperCase())
+        }
+        placeholder="Ví dụ: BODYJAM74"
+        loading={loading}
+        enterButton="Thêm"
+        onSearch={handleAddProgram}
+      />
     </div>
   );
 };

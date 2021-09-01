@@ -42,7 +42,7 @@ const Announcement = () => (
     <p>
       Link masterclass{" "}
       <a
-        href="https://drive.google.com/drive/folders/1Z--6Ruef5Pm2aubf9jpY3Lu34eLpSunR?usp=sharing"
+        href="https://drive.google.com/drive/folders/1jcDUA9vHf3whig_TOUHA0WTJBup925i8?usp=sharing"
         target="_blank"
         rel="noreferrer"
       >

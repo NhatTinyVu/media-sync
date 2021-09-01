@@ -69,7 +69,7 @@ const App = () => {
   const [socketID, setSocketID] = useState("");
   const [program, setProgram] = useState([]);
   const [currentProgram, setCurrentProgram] = useState("");
-  const [currentPlayingStatus, setCurrentPlayingStatus] = useState(true);
+  const [currentPlayingStatus, setCurrentPlayingStatus] = useState(null);
   const backgroundStyle = useBackground();
 
   useEffect(() => {
@@ -82,15 +82,17 @@ const App = () => {
     });
 
     socket.on("users", (users) => {
-      const newUsers = JSON.parse(users);
-      console.log("users", newUsers);
-      if (isEmpty(newUsers)) {
-        window?.localStorage?.setItem("socketID", undefined);
-        window?.localStorage?.clear();
-        window.location.reload();
-      }
+      try {
+        const newUsers = JSON.parse(users);
+        console.log("users", newUsers);
+        if (isEmpty(newUsers)) {
+          window?.localStorage?.setItem("socketID", undefined);
+          window?.localStorage?.clear();
+          window.location.reload();
+        }
 
-      setUsers(newUsers);
+        setUsers(newUsers);
+      } catch (e) {}
     });
 
     socket.on("host", (newHost) => {
@@ -104,18 +106,28 @@ const App = () => {
     });
 
     socket.on("program", (newProgram) => {
-      console.log("program", newProgram);
-      setProgram(newProgram ? JSON.parse(newProgram) : []);
+      try {
+        console.log("program", newProgram);
+        setProgram(newProgram ? JSON.parse(newProgram) : []);
+      } catch (e) {}
     });
 
     socket.on("currentProgram", (newCurrentProgram) => {
-      console.log("currentProgram", newCurrentProgram);
-      setCurrentProgram(JSON.parse(newCurrentProgram));
+      try {
+        console.log("currentProgram", newCurrentProgram);
+        setCurrentProgram(
+          newCurrentProgram ? JSON.parse(newCurrentProgram) : ""
+        );
+      } catch (e) {}
     });
 
     socket.on("currentPlayingStatus", (newCurrentPlayingStatus) => {
-      console.log("currentPlayingStatus", newCurrentPlayingStatus);
-      setCurrentPlayingStatus(JSON.parse(newCurrentPlayingStatus));
+      try {
+        console.log("currentPlayingStatus", newCurrentPlayingStatus);
+        setCurrentPlayingStatus(
+          newCurrentPlayingStatus ? JSON.parse(newCurrentPlayingStatus) : ""
+        );
+      } catch (e) {}
     });
 
     if (socket) return () => socket.disconnect();
